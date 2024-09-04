@@ -1,2 +1,0 @@
-Linha 1: A página deve conter pelo menos um conteúdo
-Fim da compilacao

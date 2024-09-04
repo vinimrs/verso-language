@@ -1,63 +1,51 @@
 grammar Verso;
 
-layout
-    : page EOF
-    ;
+// Palavras-chave
+PAGE: 'page';
+SECTION: 'section';
+HEADER: 'header';
+FOOTER: 'footer';
+PARAGRAPH: 'paragraph';
+IMAGE: 'image';
+LINK: 'link';
+ALT: 'alt';
+HREF: 'href';
 
-page
-    : 'page' '{' content+ '}'
-    ;
+// Regras de tokens
+STRING : '"' ( ~["\r\n] | '""' )* '"';
+TEXT: [a-zA-Z0-9]+ ( ' ' [a-zA-Z0-9]+ | '.')*;
+WS 	:	( ' ' |'\t' | '\r' | '\n') -> skip
+	;
 
-content
-    : section
-    | header
-    | footer
-    | paragraph
-    | image
-    | link
-    ;
+// Simbolos não reconhecidos na linguagem
+ERRO: '~' | '$' | '}' | '|' | '!' | '@' | '{' ;
 
-section
-    : 'section' '{' content+ '}'
-    ;
 
-header
-    : 'header' '{' text '}'
-    ;
+// Regras de produção
+layout: page EOF;
 
-footer
-    : 'footer' '{' text '}'
-    ;
+page: PAGE '{' content* '}';
 
-paragraph
-    : 'paragraph' '{' text '}'
-    ;
+content: section
+       | header
+       | footer
+       | paragraph
+       | image
+       | link;
 
-image
-    : 'image' '(' STRING ')' attribute?
-    ;
+section: SECTION '{' content* '}';
 
-link
-    : 'link' '(' STRING ')' '{' text '}'
-    ;
+header: HEADER '{' text '}';
 
-attribute
-    : 'alt' '=' STRING
-    | 'href' '=' STRING
-    ;
+footer: FOOTER '{' text '}';
 
-text
-    : TEXT+
-    ;
+paragraph: PARAGRAPH '{' text '}';
 
-STRING
-    : '"' (~["\r\n])* '"'
-    ;
+image: IMAGE '(' STRING ')' attribute?;
 
-TEXT
-    : ~[{}\r\n]+
-    ;
+link: LINK '(' STRING ')' '{' text '}';
 
-WS
-    : [ \t\r\n]+ -> skip
-    ;
+attribute: ALT '=' STRING
+         | HREF '=' STRING;
+
+text: TEXT+;

@@ -1,89 +1,127 @@
 package br.ufscar.dc.compiladores.verso;
 
 import br.ufscar.dc.compiladores.verso.VersoParser.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.antlr.v4.runtime.Token;
 
 public class VersoSemanticAnalyzer extends VersoBaseVisitor<Object> {
 
-    Scope escoposAninhados = new Scope(SymbolsTable.Types.VOID);
+  // Usamos StringBuilder para construir o HTML
+  private StringBuilder html = new StringBuilder();
 
-    @Override
-    public Object visitPage(PageContext ctx) {
-        // Verifica se há ao menos um conteúdo na página
-        if (ctx.content().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "A página deve conter pelo menos um conteúdo");
-        }
-        return super.visitPage(ctx);
+  Scope escoposAninhados = new Scope(SymbolsTable.Types.VOID);
+
+  @Override
+  public Object visitPage(PageContext ctx) {
+    html.append("<html>\n");
+
+    // Verifica se há ao menos um conteúdo na página
+    if (ctx.content().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "A página deve conter pelo menos um conteúdo");
     }
 
-    @Override
-    public Object visitSection(SectionContext ctx) {
-        // Verifica se a seção contém conteúdos válidos
-        if (ctx.content().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "A seção deve conter pelo menos um conteúdo");
-        }
-        return super.visitSection(ctx);
+    super.visitPage(ctx); // Continue a visitação
+    html.append("</html>\n");
+    return html.toString();
+  }
+
+  @Override
+  public Object visitSection(SectionContext ctx) {
+    html.append("<section>\n");
+    // Verifica se a seção contém conteúdos válidos
+    if (ctx.content().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "A seção " + ctx.getText() + " deve conter pelo menos um conteúdo");
     }
 
-    @Override
-    public Object visitHeader(HeaderContext ctx) {
-        // Verifica se o cabeçalho contém texto
-        if (ctx.text() == null || ctx.text().getText().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "O cabeçalho deve conter texto");
-        }
-        return super.visitHeader(ctx);
+    super.visitSection(ctx); // Continue a visitação
+    html.append("</section>\n");
+    return null;
+  }
+
+  @Override
+  public Object visitHeader(HeaderContext ctx) {
+    html.append("<header>");
+
+    if (ctx.text() == null || ctx.text().getText().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "O cabeçalho deve conter texto");
+    } else {
+      html.append(ctx.text().getText());
     }
 
-    @Override
-    public Object visitFooter(FooterContext ctx) {
-        // Verifica se o rodapé contém texto
-        if (ctx.text() == null || ctx.text().getText().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "O rodapé deve conter texto");
-        }
-        return super.visitFooter(ctx);
+    html.append("</header>\n");
+    return null;
+  }
+
+  @Override
+  public Object visitFooter(FooterContext ctx) {
+    html.append("<footer>");
+
+    if (ctx.text() == null || ctx.text().getText().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "O rodapé deve conter texto");
+    } else {
+      html.append(ctx.text().getText());
     }
 
-    @Override
-    public Object visitParagraph(ParagraphContext ctx) {
-        // Verifica se o parágrafo contém texto
-        if (ctx.text() == null || ctx.text().getText().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "O parágrafo deve conter texto");
-        }
-        return super.visitParagraph(ctx);
+    html.append("</footer>\n");
+    return null;
+  }
+
+  @Override
+  public Object visitParagraph(ParagraphContext ctx) {
+    html.append("<p>");
+
+    if (ctx.text() == null || ctx.text().getText().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "O parágrafo deve conter texto");
+    } else {
+      html.append(ctx.text().getText());
     }
 
-    @Override
-    public Object visitImage(ImageContext ctx) {
-        // Verifica se a imagem contém um caminho válido
-        if (ctx.STRING() == null || ctx.STRING().getText().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "A imagem deve conter um caminho válido");
-        }
-        // Verifica se o texto alternativo está presente
-        if (ctx.attribute() != null && ctx.attribute().STRING() == null) {
-            VersoUtils.addSemanticError(ctx.start, "O atributo 'alt' deve conter um texto válido");
-        }
-        return super.visitImage(ctx);
+    html.append("</p>\n");
+    return null;
+  }
+
+  @Override
+  public Object visitImage(ImageContext ctx) {
+    html.append("<img src=\"");
+
+    if (ctx.STRING() == null || ctx.STRING().getText().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "A imagem deve conter um caminho válido");
+    } else {
+      html.append(ctx.STRING().getText().replace("\"", ""));
     }
 
-    @Override
-    public Object visitLink(LinkContext ctx) {
-        // Verifica se o link contém uma URL válida e texto
-        if (ctx.STRING() == null || ctx.STRING().getText().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "O link deve conter uma URL válida");
-        }
-        if (ctx.text() == null || ctx.text().getText().isEmpty()) {
-            VersoUtils.addSemanticError(ctx.start, "O link deve conter um texto de ancoragem válido");
-        }
-        return super.visitLink(ctx);
+    html.append("\"");
+
+    // Verifica o atributo 'alt' se presente
+    if (ctx.attribute() != null && ctx.attribute().STRING() != null) {
+      html.append(" alt=\"").append(ctx.attribute().STRING().getText().replace("\"", "")).append("\"");
     }
 
-    // Método genérico para adicionar erros semânticos
-    private void addSemanticError(Token token, String message) {
-        int line = token.getLine();
-        int charPositionInLine = token.getCharPositionInLine();
-        System.err.println("Erro semântico na linha " + line + ":" + charPositionInLine + " - " + message);
+    html.append(" />\n");
+    return null;
+  }
+
+  @Override
+  public Object visitLink(LinkContext ctx) {
+    html.append("<a href=\"");
+
+    if (ctx.STRING() == null || ctx.STRING().getText().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "O link deve conter uma URL válida");
+    } else {
+      html.append(ctx.STRING().getText().replace("\"", ""));
     }
+
+    html.append("\">");
+
+    if (ctx.text() == null || ctx.text().getText().isEmpty()) {
+      VersoUtils.addSemanticError(ctx.start, "O link deve conter um texto de ancoragem válido");
+    } else {
+      html.append(ctx.text().getText());
+    }
+
+    html.append("</a>\n");
+    return null;
+  }
+
+  public String getGeneratedHtml() {
+    return html.toString();
+  }
 }
