@@ -17,23 +17,23 @@ public class Principal {
       CharStream input = CharStreams.fromFileName(args[0]);
 
       // Inicializa o lexer com o fluxo de caracteres
-      LALexer lexer = new LALexer(input);
+      VersoLexer lexer = new VersoLexer(input);
 
       // Cria um fluxo de tokens a partir do lexer
       CommonTokenStream tokens = new CommonTokenStream(lexer);
 
       // Inicializa o parser com o fluxo de tokens
-      LAParser parser = new LAParser(tokens);
+      VersoParser parser = new VersoParser(tokens);
 
       // Abre o arquivo de destino para escrita (args[1])
       FileWriter writer = new FileWriter(args[1]);
 
       // Inicia o processo de análise
-      LAParser.ProgramaContext arvore = parser.programa();
+      VersoParser.PageContext arvore = parser.page();
 
       // Analisador semântico é criado e o programa visita os nós da árvore criada
-      VersoSemanticAnaliser as = new VersoSemanticAnaliser();
-      as.visitPrograma(arvore);
+      VersoSemanticAnalyzer as = new VersoSemanticAnalyzer();
+      as.visitPage(arvore);
 
       // Obtém o iterator de erros e imprime os erros
       Iterator<String> iterator = VersoUtils.errosSemanticos.iterator();

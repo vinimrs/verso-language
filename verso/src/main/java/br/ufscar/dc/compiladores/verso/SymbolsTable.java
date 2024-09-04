@@ -3,75 +3,87 @@ package br.ufscar.dc.compiladores.verso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// Classe que representa uma tabela de símbolos
+// Classe que representa uma tabela de símbolos para o compilador Verso
 public class SymbolsTable {
-  public SymbolsTable.Types returnType;
+    public SymbolsTable.Types returnType;
 
-  public enum Types {
-    INT, REAL, CADEIA, LOGICO, INVALIDO, REG, VOID
-  }
-
-  public enum Structure {
-    VAR, CONST, PROC, FUNC, TIPO
-  }
-
-  class SymbolsTableEntry {
-    String name;
-    Types tipo;
-    Structure structure;
-
-    public SymbolsTableEntry(String name, Types tipo, Structure structure) {
-      this.name = name;
-      this.tipo = tipo;
-      this.structure = structure;
+    // Enumeração para os tipos de elementos na linguagem Verso
+    public enum Types {
+        PAGE, SECTION, HEADER, FOOTER, PARAGRAPH, IMAGE, LINK, STRING, INVALIDO, VOID
     }
-  }
 
-  private HashMap<String, SymbolsTableEntry> Mtabela;
-  private HashMap<String, ArrayList<SymbolsTableEntry>> Ttabela;
-
-  public SymbolsTable(SymbolsTable.Types returnType) {
-    Mtabela = new HashMap<>();
-    Ttabela = new HashMap<>();
-    this.returnType = returnType;
-  }
-
-  public void add(String name, Types tipo, Structure structure) {
-    SymbolsTableEntry input = new SymbolsTableEntry(name, tipo, structure);
-    Mtabela.put(name, input);
-  }
-
-  public void add(SymbolsTableEntry input) {
-    Mtabela.put(input.name, input);
-
-  }
-
-  public void add(String tipoName, SymbolsTableEntry input) {
-    if (Ttabela.containsKey(tipoName)) {
-      Ttabela.get(tipoName).add(input);
-    } else {
-      ArrayList<SymbolsTableEntry> list = new ArrayList<>();
-      list.add(input);
-      Ttabela.put(tipoName, list);
+    // Enumeração para as estruturas dos elementos na linguagem Verso
+    public enum Structure {
+        ELEMENT, ATTRIBUTE
     }
-  }
 
-  public Types verify(String name) {
-    if (Mtabela.containsKey(name))
-      return Mtabela.get(name).tipo;
-    else
-      return null;
-  }
+    // Classe interna que representa uma entrada na tabela de símbolos
+    class SymbolsTableEntry {
+        String name;
+        Types tipo;
+        Structure structure;
 
-  public Structure getStructure(String name) {
-    return Mtabela.get(name).structure;
-  }
+        public SymbolsTableEntry(String name, Types tipo, Structure structure) {
+            this.name = name;
+            this.tipo = tipo;
+            this.structure = structure;
+        }
+    }
 
-  public boolean exists(String name) {
-    return Mtabela.containsKey(name);
-  }
+    // HashMap para armazenar as entradas da tabela de símbolos
+    private HashMap<String, SymbolsTableEntry> Mtabela;
+    // HashMap para armazenar os atributos associados a cada tipo de elemento
+    private HashMap<String, ArrayList<SymbolsTableEntry>> Ttabela;
 
-  public ArrayList<SymbolsTableEntry> getTypeProperties(String name) {
-    return Ttabela.get(name);
-  }
+    // Construtor que inicializa a tabela de símbolos com o tipo de retorno
+    public SymbolsTable(SymbolsTable.Types returnType) {
+        Mtabela = new HashMap<>();
+        Ttabela = new HashMap<>();
+        this.returnType = returnType;
+    }
+
+    // Método para adicionar uma nova entrada na tabela de símbolos
+    public void add(String name, Types tipo, Structure structure) {
+        SymbolsTableEntry input = new SymbolsTableEntry(name, tipo, structure);
+        Mtabela.put(name, input);
+    }
+
+    // Método para adicionar uma entrada existente na tabela de símbolos
+    public void add(SymbolsTableEntry input) {
+        Mtabela.put(input.name, input);
+    }
+
+    // Método para adicionar um atributo a um tipo de elemento
+    public void add(String tipoName, SymbolsTableEntry input) {
+        if (Ttabela.containsKey(tipoName)) {
+            Ttabela.get(tipoName).add(input);
+        } else {
+            ArrayList<SymbolsTableEntry> list = new ArrayList<>();
+            list.add(input);
+            Ttabela.put(tipoName, list);
+        }
+    }
+
+    // Método para verificar o tipo de um elemento
+    public Types verify(String name) {
+        if (Mtabela.containsKey(name))
+            return Mtabela.get(name).tipo;
+        else
+            return null;
+    }
+
+    // Método para obter a estrutura de um elemento
+    public Structure getStructure(String name) {
+        return Mtabela.get(name).structure;
+    }
+
+    // Método para verificar se um elemento existe na tabela de símbolos
+    public boolean exists(String name) {
+        return Mtabela.containsKey(name);
+    }
+
+    // Método para obter as propriedades de um tipo de elemento (atributos)
+    public ArrayList<SymbolsTableEntry> getTypeProperties(String name) {
+        return Ttabela.get(name);
+    }
 }
