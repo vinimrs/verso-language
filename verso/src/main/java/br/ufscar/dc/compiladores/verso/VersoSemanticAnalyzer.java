@@ -11,7 +11,9 @@ public class VersoSemanticAnalyzer extends VersoBaseVisitor<Object> {
 
   @Override
   public Object visitPage(PageContext ctx) {
-    html.append("<html>\n");
+    html.append("<!DOCTYPE html lang=\"pt-BR\">\n");
+    html.append(HtmlCodeGenerator.getHtmlHeaderWithStyles());
+    html.append("<body>\n");
 
     // Verifica se há ao menos um conteúdo na página
     if (ctx.content().isEmpty()) {
@@ -19,6 +21,7 @@ public class VersoSemanticAnalyzer extends VersoBaseVisitor<Object> {
     }
 
     super.visitPage(ctx); // Continue a visitação
+    html.append("</body>\n");
     html.append("</html>\n");
     return html.toString();
   }

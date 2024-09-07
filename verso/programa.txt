@@ -1,5 +1,9 @@
 page {
+    header {
+        This is a valid header.
+    }
     section {
         paragraph { This is a valid paragraph. }
+        image ("image.jpg") alt="This is an image."
     }
 }
