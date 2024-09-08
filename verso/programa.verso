@@ -4,6 +4,6 @@ page {
     }
     section {
         paragraph { This is a valid paragraph. }
-        image ("image.jpg") alt="This is an image."
+        image ("image.jpg")
     }
 }

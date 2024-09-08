@@ -37,25 +37,30 @@ public class Principal {
       // Inicia o processo de análise
       VersoParser.PageContext arvore = parser.page();
 
-      // Analisador semântico é criado e o programa visita os nós da árvore criada
-      VersoSemanticAnalyzer as = new VersoSemanticAnalyzer();
-      as.visitPage(arvore);
-      String html = as.getGeneratedHtml();
+      if (!ErrorOcurred.errorOccurred) {
 
-      // Obtém o iterator de erros e imprime os erros
-      Iterator<String> iterator = VersoUtils.errosSemanticos.iterator();
-      while (iterator.hasNext()) {
-        String err = iterator.next();
-        writer.write(err + "\n");
+        // Analisador semântico é criado e o programa visita os nós da árvore criada
+        VersoSemanticAnalyzer as = new VersoSemanticAnalyzer();
+        as.visitPage(arvore);
+        String html = as.getGeneratedHtml();
+
+        // Obtém o iterator de erros e imprime os erros
+        Iterator<String> iterator = VersoUtils.errosSemanticos.iterator();
+        while (iterator.hasNext()) {
+          String err = iterator.next();
+          writer.write(err + "\n");
+        }
+
+        // escrever os tokens para debug
+        // for (Token token : tokens.getTokens()) {
+        // writer.write(token.toString() + "\n");
+        // }
+
+        if (VersoUtils.errosSemanticos.size() == 0) {
+          // Programa é finalizado
+          writer.write(html + "\n");
+        }
       }
-
-      // escrever os tokens para debug
-      // for (Token token : tokens.getTokens()) {
-      // writer.write(token.toString() + "\n");
-      // }
-
-      // Programa é finalizado
-      writer.write(html + "\n");
 
       // Fecha o arquivo de destino
       writer.close();

@@ -14,11 +14,9 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 public class MyCustomErrorListener implements ANTLRErrorListener {
   private FileWriter file;
-  private boolean errou;
 
   public MyCustomErrorListener(FileWriter file) {
     this.file = file;
-    this.errou = false;
   }
 
   @Override
@@ -51,7 +49,7 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
   public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
       String msg, RecognitionException e) {
     // Verifica se um erro já foi identificado anteriormente
-    if (errou)
+    if (ErrorOcurred.errorOccurred)
       return;
 
     // Converte o símbolo ofensivo para um Token
@@ -66,7 +64,7 @@ public class MyCustomErrorListener implements ANTLRErrorListener {
       // file.write(msg);
 
       // Marca que um erro foi identificado
-      errou = true;
+      ErrorOcurred.errorOccurred = true;
     } catch (IOException ex) {
       // TODO: Lidar com a exceção de E/S
     }
