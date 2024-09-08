@@ -81,26 +81,33 @@ public class VersoSemanticAnalyzer extends VersoBaseVisitor<Object> {
     return null;
   }
 
-  @Override
-  public Object visitImage(ImageContext ctx) {
+@Override
+public Object visitImage(ImageContext ctx) {
     html.append("<img src=\"");
 
+    // Verifica se o caminho da imagem é válido
     if (ctx.STRING() == null || ctx.STRING().getText().isEmpty()) {
-      VersoUtils.addSemanticError(ctx.start, "A imagem deve conter um caminho válido");
+        VersoUtils.addSemanticError(ctx.start, "A imagem deve conter um caminho válido");
     } else {
-      html.append(ctx.STRING().getText().replace("\"", ""));
+        html.append(ctx.STRING().getText().replace("\"", ""));
     }
 
     html.append("\"");
 
-    // Verifica o atributo 'alt' se presente
-    if (ctx.attribute() != null && ctx.attribute().STRING() != null) {
-      html.append(" alt=\"").append(ctx.attribute().STRING().getText().replace("\"", "")).append("\"");
+    // Verifica o atributo 'alt'
+    if (ctx.attribute() != null) {
+        AttributeContext attr = ctx.attribute();
+        if (attr.getText().startsWith("alt")) {
+            html.append(" alt=\"").append(attr.STRING().getText().replace("\"", "")).append("\"");
+        }
+    } else {
+        // Se o atributo 'alt' não for encontrado, adiciona um erro semântico
+        VersoUtils.addSemanticError(ctx.start, "O atributo 'alt' é obrigatório para imagens");
     }
 
     html.append(" />\n");
     return null;
-  }
+}
 
   @Override
   public Object visitLink(LinkContext ctx) {
