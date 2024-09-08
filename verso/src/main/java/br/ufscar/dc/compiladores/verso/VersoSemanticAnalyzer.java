@@ -109,18 +109,20 @@ public Object visitImage(ImageContext ctx) {
     return null;
 }
 
-  @Override
-  public Object visitLink(LinkContext ctx) {
+@Override
+public Object visitLink(LinkContext ctx) {
     html.append("<a href=\"");
 
+    // Verifica se o caminho do link (href) é válido
     if (ctx.STRING() == null || ctx.STRING().getText().isEmpty()) {
-      VersoUtils.addSemanticError(ctx.start, "O link deve conter uma URL válida");
+      VersoUtils.addSemanticError(ctx.start, "O link deve conter uma URL válida (href)");
     } else {
       html.append(ctx.STRING().getText().replace("\"", ""));
     }
 
     html.append("\">");
 
+    // Verifica se o link tem texto de ancoragem
     if (ctx.text() == null || ctx.text().getText().isEmpty()) {
       VersoUtils.addSemanticError(ctx.start, "O link deve conter um texto de ancoragem válido");
     } else {
@@ -129,7 +131,7 @@ public Object visitImage(ImageContext ctx) {
 
     html.append("</a>\n");
     return null;
-  }
+}
 
   public String getGeneratedHtml() {
     return html.toString();
