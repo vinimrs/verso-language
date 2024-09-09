@@ -14,16 +14,102 @@ O projeto é estruturado como uma aplicação Java Maven, com os seguintes compo
 - `Scope.java` e `SymbolsTable.java`: Gerenciam o escopo e a tabela de símbolos.
 - `ErrorOcurred.java`: Controla o estado de ocorrência de erros.
 
-## Funcionalidades
 
-### Elementos da Linguagem Verso
-- `page`: Elemento raiz que contém todo o conteúdo.
-- `section`: Agrupa outros elementos.
-- `header`: Define um cabeçalho.
-- `footer`: Define um rodapé.
-- `paragraph`: Define um parágrafo de texto.
-- `image`: Insere uma imagem (requer atributo `alt`).
-- `link`: Cria um link (requer URL e texto de ancoragem).
+## Verso.g4 (Definição da Gramática)
+
+O arquivo **`verso.g4`** contém a definição da gramática utilizada pelo compilador Verso para analisar e processar a linguagem Verso. Essa gramática é responsável por definir as palavras-chave, regras de tokens, símbolos não reconhecidos e as regras de produção que descrevem a estrutura sintática da linguagem.
+
+### Palavras-chave
+As principais palavras reservadas da linguagem Verso são definidas abaixo:
+
+- **`PAGE`**: Define o elemento raiz de uma página.
+- **`SECTION`**: Agrupa outros elementos.
+- **`HEADER`**: Define um cabeçalho.
+- **`FOOTER`**: Define um rodapé.
+- **`PARAGRAPH`**: Define um parágrafo de texto.
+- **`IMAGE`**: Insere uma imagem (exige um atributo `alt`).
+- **`LINK`**: Cria um link (exige um URL e texto de ancoragem).
+
+### Regras de Tokens
+Essas regras definem como os diferentes elementos da linguagem são identificados e processados. Por exemplo, as strings, textos e os espaços em branco são interpretados como tokens pela gramática.
+
+- **`STRING`**: Identifica qualquer sequência de caracteres entre aspas.
+- **`TEXT`**: Identifica qualquer sequência de caracteres alfanuméricos, que formam o texto principal da linguagem.
+- **`WS`**: Representa espaços em branco, que são ignorados durante a análise sintática.
+
+### Símbolos Não Reconhecidos
+A linguagem define um conjunto de símbolos que não são reconhecidos pela gramática e, portanto, são considerados erros sintáticos:
+
+- **ERRO**: Inclui caracteres como `~`, `$`, `}`, `|`, `!`, `@`, `{`, que não fazem parte da sintaxe válida da linguagem Verso.
+
+### Regras de Produção
+Essas são as regras que descrevem como os elementos da linguagem Verso são compostos. Elas indicam como os elementos básicos, como `page`, `section`, `header`, e outros, devem ser combinados para formar uma estrutura válida em Verso.
+
+- **`layout`**: Define a estrutura geral de uma página, que começa com a palavra-chave `PAGE` e contém múltiplos elementos.
+- **`page`**: Define o início de uma página, que pode conter seções, cabeçalhos, rodapés, parágrafos, imagens e links.
+- **`section`**: Uma seção que pode conter outros elementos dentro dela.
+- **`header`** e **`footer`**: Cabeçalhos e rodapés contêm texto simples.
+- **`paragraph`**: Um parágrafo de texto.
+- **`image`**: Um elemento de imagem com um caminho especificado entre parênteses e um atributo `alt` opcional.
+- **`link`**: Um link que contém um URL e o texto que será exibido.
+
+### Exemplo da Gramática
+
+Aqui está a definição completa da gramática:
+
+```antlr
+grammar Verso;
+
+// Palavras-chave
+PAGE: 'page';
+SECTION: 'section';
+HEADER: 'header';
+FOOTER: 'footer';
+PARAGRAPH: 'paragraph';
+IMAGE: 'image';
+LINK: 'link';
+ALT: 'alt';
+HREF: 'href';
+
+// Regras de tokens
+STRING : '"' ( ~["\r\n] | '""' )* '"';
+TEXT: [a-zA-Z0-9]+ ( ' ' [a-zA-Z0-9]+ | '.' )*;
+WS 	:	( ' ' |'\t' | '\r' | '\n') -> skip
+	;
+
+// Simbolos não reconhecidos na linguagem
+ERRO: '~' | '$' | '}' | '|' | '!' | '@' | '{' ;
+
+// Regras de produção
+layout: page EOF;
+
+page: PAGE '{' content* '}';
+
+content: section
+       | header
+       | footer
+       | paragraph
+       | image
+       | link;
+
+section: SECTION '{' content* '}';
+
+header: HEADER '{' text '}';
+
+footer: FOOTER '{' text '}';
+
+paragraph: PARAGRAPH '{' text '}';
+
+image: IMAGE '(' STRING ')' attribute?;
+
+link: LINK '(' STRING ')' '{' text '}';
+
+attribute: ALT '=' STRING
+         | HREF '=' STRING;
+
+text: TEXT+;
+```
+
 
 ### Análise Semântica
 O compilador realiza verificações semânticas, incluindo:
