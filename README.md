@@ -75,6 +75,64 @@ page {
 }
 ```
 
+## Exemplo de HTML gerado
+```
+<!DOCTYPE html lang="pt-BR">
+
+<head>
+    <style>
+        section {
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        header,
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>Welcome to my Verso page</header>
+    <section>
+        <p>This is a sample paragraph.</p>
+        <img src="example.jpg" alt="An example image" />
+        <a href="https://example.com">Click here for more</a>
+    </section>
+    <footer>2024 My Verso Site</footer>
+</body>
+
+</html>
+```
+
 ## Autores:
 - [Vinícius Romualdo](https://github.com/vinimrs)
 - [Matheus Bessa](https://github.com/mthsB3ssa)
