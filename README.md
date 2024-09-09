@@ -136,6 +136,80 @@ page {
 ![Imagem da página gerada](images/verso.png)
 
 
+## Exemplo mais elaborado
+
+```
+page {
+    header {
+        Welcome to my Advanced Verso Portfolio
+    }
+    section {
+        header {
+            About Me
+        }
+        paragraph {
+            Hi I am a web developer with a passion for creating elegant and efficient solutions.
+
+            My expertise includes frontend and backend technologies
+        }
+        image ("profile.png") alt="A professional headshot of me"
+    }
+    section {
+        header {
+            My Projects
+        }
+        paragraph {
+            Here are some of my recent projects
+        }
+        section {
+            header {
+                Project 1 Ecommerce Platform
+            }
+            paragraph {
+                A fully responsive online store built with modern web technologies
+            }
+            image ("ecommerce.png") alt="Screenshot of the ecommerce platform"
+            link ("https://github.com/myuser/ecommerce") {
+                View on GitHub
+            }
+        }
+        section {
+            header {
+                Project 2 Weather App
+            }
+            paragraph {
+                A realtime weather application using geolocation and weather APIs
+            }
+            image ("weatherapp.png") alt="Interface of the weather application"
+            link ("https://myweatherapp.com") {
+                Try it out
+            }
+        }
+    }
+    section {
+        header {
+            Contact Me
+        }
+        paragraph {
+            Feel free to reach out for collaborations or questions
+        }
+        link ("eduardospinelli1@gmail.com") {
+            Email Me
+        }
+        link ("https://www.linkedin.com/in/eduardo-spinelli-a309011a1/") {
+            Connect on LinkedIn
+        }
+    }
+    footer {
+        2024 My Professional Portfolio Built with Verso language
+    }
+}
+```
+![Demo Video](./images/funcionamento.gif)
+
+
+
+
 ## Autores:
 - [Vinícius Romualdo](https://github.com/vinimrs)
 - [Matheus Bessa](https://github.com/mthsB3ssa)
