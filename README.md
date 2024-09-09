@@ -50,6 +50,12 @@ mvn clean package
 java -jar target/verso-1.0-SNAPSHOT-jar-with-dependencies.jar input.verso output.html
 ```
 
+## OU
+
+```
+./run.sh
+```
+
 Onde:
 - `input.verso` é o arquivo de entrada contendo o código Verso
 - `output.html` é o arquivo de saída onde o HTML gerado será escrito
