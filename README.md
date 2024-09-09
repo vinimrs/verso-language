@@ -133,6 +133,9 @@ page {
 </html>
 ```
 
+![Imagem da página gerada](images/verso.png)
+
+
 ## Autores:
 - [Vinícius Romualdo](https://github.com/vinimrs)
 - [Matheus Bessa](https://github.com/mthsB3ssa)
