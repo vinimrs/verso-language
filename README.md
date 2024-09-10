@@ -1,5 +1,5 @@
 # Compilador Verso-language
-<img src="https://github.com/user-attachments/assets/cba617fa-0fe9-4a1d-87aa-e4291d553026" width="120px" />
+<img src="https://github.com/user-attachments/assets/cba617fa-0fe9-4a1d-87aa-e4291d553026" width="250px" />
 
 ## Visão Geral
 Verso-language é um compilador desenvolvido como parte de um projeto da disciplina de Compiladores. Ele processa uma linguagem de marcação simples chamada Verso, que permite a criação de layouts de página estruturados, e gera código HTML correspondente.
