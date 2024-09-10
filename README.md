@@ -300,6 +300,8 @@ page {
 ![Demo Video](./images/funcionamento.gif)
 
 
+## Assista o video do funcionamento e da explicação da nossa gramática!
+[Assista ao vídeo no YouTube](https://youtu.be/nMfl5Jr0qhc)
 
 
 ## Autores:
